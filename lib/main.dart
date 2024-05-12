@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc_vandad/firebase_options.dart';
+import 'package:flutter_bloc_vandad/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,12 +16,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: false,
+        appBarTheme: const AppBarTheme(centerTitle: true),
       ),
+      home: const HomePage(),
     );
   }
 }
