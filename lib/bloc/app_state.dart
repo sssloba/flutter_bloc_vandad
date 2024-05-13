@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart' show immutable;
@@ -56,4 +54,27 @@ class AppStateLoggedOut extends AppState {
   @override
   String toString() =>
       'AppStateLoggedOut, isLoading = $isLoading, authError = $authError';
+}
+
+@immutable
+class AppStateIsInRegistrationView extends AppState {
+  const AppStateIsInRegistrationView({
+    required super.isLoading,
+    required super.authError,
+  });
+
+  @override
+  String toString() =>
+      'AppStateIsInRegistrationView, isLoading = $isLoading, authError = $authError';
+}
+
+extension GetUser on AppState {
+  User? get user {
+    final cls = this;
+    if (cls is AppStateLoggedIn) {
+      return cls.user;
+    } else {
+      return null;
+    }
+  }
 }
