@@ -78,3 +78,14 @@ extension GetUser on AppState {
     }
   }
 }
+
+extension GetImages on AppState {
+  Iterable<Reference>? get images {
+    final cls = this;
+    if (cls is AppStateLoggedIn) {
+      return cls.images;
+    } else {
+      return null;
+    }
+  }
+}
