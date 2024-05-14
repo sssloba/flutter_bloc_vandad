@@ -22,7 +22,7 @@ class AppStateLoggedIn extends AppState {
     required this.user,
     required this.images,
     required super.isLoading,
-    required super.authError,
+    super.authError,
   });
 
   @override
