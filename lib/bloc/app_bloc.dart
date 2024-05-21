@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_vandad/auth/auth_error.dart';
 import 'package:flutter_bloc_vandad/bloc/app_event.dart';
 import 'package:flutter_bloc_vandad/bloc/app_state.dart';
 import 'package:flutter_bloc_vandad/utils/upload_image.dart';
@@ -13,6 +15,68 @@ class AppBloc extends Bloc<AppEvent, AppState> {
             isLoading: false,
           ),
         ) {
+    // handle account deletion
+    on<AppEventDeleteAccount>((event, emit) async {
+      final user = FirebaseAuth.instance.currentUser;
+      // log the user out if we don't have a current user
+      if (user == null) {
+        emit(
+          const AppStateLoggedOut(
+            isLoading: false,
+          ),
+        );
+        return;
+      }
+      // start loading
+      emit(
+        AppStateLoggedIn(
+          user: user,
+          images: state.images ?? [],
+          isLoading: true,
+        ),
+      );
+      // delete the user folder
+      try {
+        // delete user folder
+        final folderContents =
+            await FirebaseStorage.instance.ref(user.uid).listAll();
+        for (final item in folderContents.items) {
+          await item.delete().catchError((_) {}); // maybe handle the error?
+        }
+        // delete folder itself
+        await FirebaseStorage.instance
+            .ref(user.uid)
+            .delete()
+            .catchError((_) {});
+        // delete the user
+        await user.delete();
+        // log the user out
+        await FirebaseAuth.instance.signOut();
+        // log the user out in the UI
+        emit(
+          const AppStateLoggedOut(
+            isLoading: false,
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        emit(
+          AppStateLoggedIn(
+              user: user,
+              images: state.images ?? [],
+              isLoading: false,
+              authError: AuthError.from(e)),
+        );
+      } on FirebaseException {
+        // we might not br able to delete the folder
+        // log te usder out
+        emit(
+          const AppStateLoggedOut(
+            isLoading: false,
+          ),
+        );
+      }
+    });
+
     // handle uploading images
     on<AppEventUploadImage>((event, emit) async {
       final user = state.user;
