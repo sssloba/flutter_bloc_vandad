@@ -34,6 +34,32 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         );
       },
     );
+
+    // initialize event
+    on<AppEventInitialize>(
+      (event, emit) async {
+        // get the current user
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) {
+          emit(
+            const AppStateLoggedOut(
+              isLoading: false,
+            ),
+          );
+        } else {
+          // get user's uploaded images
+          final images = await _getImages(user.uid);
+          emit(
+            AppStateLoggedIn(
+              images: images,
+              user: user,
+              isLoading: false,
+            ),
+          );
+        }
+      },
+    );
+
     // handle account deletion
     on<AppEventDeleteAccount>((event, emit) async {
       final user = FirebaseAuth.instance.currentUser;
