@@ -16,6 +16,16 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           ),
         ) {
     //
+    on<AppEventGoToRegistration>((event, emit) {
+      // no need to be async
+      emit(
+        const AppStateIsInRegistrationView(
+          isLoading: false,
+        ),
+      );
+    });
+
+    //
     on<AppEventLogin>((event, emit) async {
       emit(
         const AppStateLoggedOut(
