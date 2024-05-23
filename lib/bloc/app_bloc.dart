@@ -15,6 +15,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
             isLoading: false,
           ),
         ) {
+//
+    on<AppEventGoToLogin>((event, emit) {
+      emit(
+        const AppStateLoggedOut(
+          isLoading: false,
+        ),
+      );
+    });
+
     //
     on<AppEventRegister>((event, emit) async {
       //start loading
