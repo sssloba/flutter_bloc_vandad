@@ -15,8 +15,43 @@ class AppBloc extends Bloc<AppEvent, AppState> {
             isLoading: false,
           ),
         ) {
-//
+    //
+    on<AppEventLogin>((event, emit) async {
+      emit(
+        const AppStateLoggedOut(
+          isLoading: true,
+        ),
+      );
+      // log the user in
+      try {
+        final email = event.email;
+        final password = event.password;
+        final userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        // get images
+        final user = userCredential.user!;
+        final images = await _getImages(user.uid);
+        emit(
+          AppStateLoggedIn(
+            user: user,
+            images: images,
+            isLoading: false,
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        emit(AppStateLoggedOut(
+          isLoading: false,
+          authError: AuthError.from(e),
+        ));
+      }
+    });
+
+    //
     on<AppEventGoToLogin>((event, emit) {
+      // no need to be async
       emit(
         const AppStateLoggedOut(
           isLoading: false,
