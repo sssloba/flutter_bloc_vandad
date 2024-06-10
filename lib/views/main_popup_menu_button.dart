@@ -16,20 +16,24 @@ class MainPopupMenuButton extends StatelessWidget {
       onSelected: (value) async {
         switch (value) {
           case MenuAction.logout:
-            final shouldLogOut = await showLogOutDialog(context);
-            if (shouldLogOut) {
-              context.read<AppBloc>().add(
-                    const AppEventLogOut(),
-                  );
-            }
+            await showLogOutDialog(context).then((value) {
+              if (value) {
+                // Value will be true if 'Log out' button has been pressed.
+                context.read<AppBloc>().add(
+                      const AppEventLogOut(),
+                    );
+              }
+            });
             break;
           case MenuAction.deleteAccount:
-            final shouldDeleteAccount = await showDeleteAccountDialog(context);
-            if (shouldDeleteAccount) {
-              context.read<AppBloc>().add(
-                    const AppEventDeleteAccount(),
-                  );
-            }
+            await showDeleteAccountDialog(context).then((value) {
+              if (value) {
+                // Value will be true if  'Delete account' button has been pressed.
+                context.read<AppBloc>().add(
+                      const AppEventDeleteAccount(),
+                    );
+              }
+            });
             break;
         }
       },
