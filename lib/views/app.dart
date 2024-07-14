@@ -20,6 +20,7 @@ class App extends StatelessWidget {
           const AppEventInitialize(),
         ),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Photo Library',
         theme: ThemeData(
           useMaterial3: false,
