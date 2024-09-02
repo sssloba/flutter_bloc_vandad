@@ -17,7 +17,7 @@ class MainPopupMenuButton extends StatelessWidget {
         switch (value) {
           case MenuAction.logout:
             await showLogOutDialog(context).then((value) {
-              if (value) {
+              if (value && context.mounted) {
                 // Value will be true if 'Log out' button has been pressed.
                 context.read<AppBloc>().add(
                       const AppEventLogOut(),
@@ -27,7 +27,7 @@ class MainPopupMenuButton extends StatelessWidget {
             break;
           case MenuAction.deleteAccount:
             await showDeleteAccountDialog(context).then((value) {
-              if (value) {
+              if (value && context.mounted) {
                 // Value will be true if  'Delete account' button has been pressed.
                 context.read<AppBloc>().add(
                       const AppEventDeleteAccount(),

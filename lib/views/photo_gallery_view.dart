@@ -29,11 +29,13 @@ class PhotoGalleryView extends HookWidget {
                 if (image == null) {
                   return;
                 }
-                context.read<AppBloc>().add(
-                      AppEventUploadImage(
-                        filePathToUpload: image.path,
-                      ),
-                    );
+                if (context.mounted) {
+                  context.read<AppBloc>().add(
+                        AppEventUploadImage(
+                          filePathToUpload: image.path,
+                        ),
+                      );
+                }
               });
             },
             icon: const Icon(
